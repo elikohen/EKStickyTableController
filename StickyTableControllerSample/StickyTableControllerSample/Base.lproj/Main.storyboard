@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qAn-ED-DYA">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="VBb-Sk-o81">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="qAn-ED-DYA" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VnQ-cf-bo4">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="9tQ-nH-x1p"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WSF-m4-NrR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-454" y="32"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="bfZ-Sk-oNP">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </mapView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OPe-Ch-7kf" userLabel="Table View Background">
+                                <rect key="frame" x="0.0" y="137" width="320" height="431"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="sKM-OK-86I">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="sKM-OK-86I" secondAttribute="bottom" id="5zN-tG-6Bj"/>
+                            <constraint firstAttribute="trailing" secondItem="OPe-Ch-7kf" secondAttribute="trailing" id="BFE-Fc-NSh"/>
+                            <constraint firstItem="bfZ-Sk-oNP" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="JPd-VW-ktL"/>
+                            <constraint firstAttribute="trailing" secondItem="bfZ-Sk-oNP" secondAttribute="trailing" id="XAL-h6-3Mg"/>
+                            <constraint firstAttribute="trailing" secondItem="sKM-OK-86I" secondAttribute="trailing" id="dSo-0L-IpR"/>
+                            <constraint firstAttribute="bottom" secondItem="OPe-Ch-7kf" secondAttribute="bottom" id="eqA-8h-cUy"/>
+                            <constraint firstAttribute="bottom" secondItem="bfZ-Sk-oNP" secondAttribute="bottom" id="faj-En-m7D"/>
+                            <constraint firstItem="OPe-Ch-7kf" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="137" id="g5T-fd-1Hm"/>
+                            <constraint firstItem="sKM-OK-86I" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="kpS-Du-0lY"/>
+                            <constraint firstItem="OPe-Ch-7kf" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="ujh-hc-cOr"/>
+                            <constraint firstItem="bfZ-Sk-oNP" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="v2K-Wq-0X5"/>
+                            <constraint firstItem="sKM-OK-86I" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="xNG-fp-9Yd"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="cVc-s2-kkS"/>
+                    <connections>
+                        <outlet property="mapView" destination="bfZ-Sk-oNP" id="Qir-UM-d3c"/>
+                        <outlet property="tableBackgroundYPosition" destination="g5T-fd-1Hm" id="Uxf-m1-vHb"/>
+                        <outlet property="tableView" destination="sKM-OK-86I" id="UlS-Ko-OHr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
