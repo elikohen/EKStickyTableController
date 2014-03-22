@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "EKStickyTableController"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "iOS UITableView drag to expand/collapse header behaviour like Foursquare TableView + Map"
 
   s.description  = <<-DESC
