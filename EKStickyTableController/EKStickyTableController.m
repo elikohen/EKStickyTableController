@@ -21,6 +21,7 @@
 
 @property (nonatomic,strong) EKStickyTableProxyDelegate *mProxyDelegate;
 @property (nonatomic,weak) UITableView *mTableView;
+@property (nonatomic,weak) NSLayoutConstraint *mTableYPosConstraint;
 @property (nonatomic,weak) UIView *mParentView;
 @property (nonatomic,strong) EKStickyTableHeader *mTableHeader;
 
@@ -38,12 +39,14 @@
     return self;
 }
 
-- (void) setupOnTableView: (UITableView*) tableView withViewBelow: (UIView*) belowView parentView: (UIView*) view andDelegate:(id<EKStickyTableControllerDelegate>) delegate{
+- (void) setupOnTableView: (UITableView*) tableView withYPosConstraint: (NSLayoutConstraint*) yConstraint viewBelow: (UIView*) belowView parentView: (UIView*) view andDelegate:(id<EKStickyTableControllerDelegate>) delegate{
     self.mProxyDelegate = [EKStickyTableProxyDelegate new];
     self.mProxyDelegate.realDelegate = delegate;
     self.mProxyDelegate.controller = self;
     
     self.delegate = delegate;
+    
+    self.mTableYPosConstraint = yConstraint;
     
     CGRect tableFrame = CGRectMake(0, 0, tableView.frame.size.width, self.collapsedHeaderHeight);
     self.mTableHeader = [[EKStickyTableHeader alloc] initWithFrame:tableFrame];
@@ -111,9 +114,10 @@
     auxInset.top += newHeight - oldHeight;
     
     mAnimatingTableInsets = YES;
-    [self tableBackgroundOriginWillChange:newHeight withAnimationDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION];
+    [self tableBackgroundOriginWillChange:newHeight withAnimationDuration:0.0];
     [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
         weakSelf.mTableView.contentInset = auxInset;
+        [weakSelf.mParentView layoutIfNeeded];
     } completion:^(BOOL finished) {
         weakSelf.mTableHeader.frame = hframe;
         weakSelf.mTableView.tableHeaderView = weakSelf.mTableHeader;
@@ -130,8 +134,6 @@
     
     CGRect hframe = self.mTableHeader.frame;
     CGFloat deltaY = hframe.size.height - height;
-    hframe.size.height = height;
-    self.mTableHeader.frame = hframe;
     
     //Content offset to avoid table jumping when changing header height
     CGPoint offset = self.mTableView.contentOffset;
@@ -141,16 +143,32 @@
         offset.y = 0;
         [self onHeaderHeightWillChange:height];
         
-        //First move table (scrolling) to the correct position, and then change header height to avoid table glitching
         __weak EKStickyTableController* weakSelf = self;
-        [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
-            CGRect scrollBounds = self.mTableView.bounds;
-            scrollBounds.origin.y = deltaY;
-            weakSelf.mTableView.bounds = scrollBounds;
+        
+        [self.mParentView layoutIfNeeded];
+        //content smaller than table height => move entire table
+        if(self.mTableView.contentSize.height <= (self.mTableView.frame.size.height + self.listExpandThreshold)){
             
-        } completion:^(BOOL finished) {
-            [self applyTableOffset:offset andHeaderHeight:height];
-        }];
+            [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
+                weakSelf.mTableYPosConstraint.constant -= deltaY;
+                [weakSelf.mParentView layoutIfNeeded];
+            } completion:^(BOOL finished) {
+                weakSelf.mTableYPosConstraint.constant += deltaY;
+                [weakSelf applyTableOffset:offset andHeaderHeight:height];
+                [weakSelf.mParentView layoutIfNeeded];
+            }];
+        }
+        else{
+            //First move table (scrolling) to the correct position, and then change header height to avoid table glitching
+            [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
+                CGRect scrollBounds = self.mTableView.bounds;
+                scrollBounds.origin.y = deltaY;
+                weakSelf.mTableView.bounds = scrollBounds;
+                
+            } completion:^(BOOL finished) {
+                [weakSelf applyTableOffset:offset andHeaderHeight:height];
+            }];
+        }
     }
     else{
         [self onHeaderHeightWillChange:height];
@@ -160,7 +178,11 @@
 
 - (void) applyTableOffset: (CGPoint) offset andHeaderHeight: (CGFloat) height{
     
+    CGRect hframe = self.mTableHeader.frame;
+    hframe.size.height = height;
+    self.mTableHeader.frame = hframe;
     self.mTableView.tableHeaderView = self.mTableHeader;
+    
     if(mDragging){
         CGRect scrollBounds = self.mTableView.bounds;
         scrollBounds.origin = offset;
@@ -206,10 +228,11 @@
         [self expandHeader];
     }
     
-    if(mHeaderExpanded && !decelerate && scrollView.contentOffset.y > self.listExpandThreshold){
+    BOOL waitUntilDecelerate = (decelerate && scrollView.contentSize.height > (scrollView.frame.size.height + self.listExpandThreshold));
+    if(mHeaderExpanded && !waitUntilDecelerate && scrollView.contentOffset.y > self.listExpandThreshold){
         [self collapseHeader];
     }
-    else if(mHeaderExpanded && decelerate){
+    else if(mHeaderExpanded && waitUntilDecelerate){
         mWaitUntilDecelerated = YES;
     }
 }

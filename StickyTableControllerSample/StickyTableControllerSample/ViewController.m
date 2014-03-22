@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *tableViewBackground;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableBackgroundYPosition;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableTopConstraint;
 
 
 @property (strong, nonatomic) EKStickyTableController *mStickyTableController;
@@ -31,7 +32,7 @@
     self.navigationController.navigationBar.translucent = NO;
     
     self.mStickyTableController = [[EKStickyTableController alloc] init];
-    [self.mStickyTableController setupOnTableView:self.tableView withViewBelow:self.mapView parentView:self.view andDelegate:self];
+    [self.mStickyTableController setupOnTableView:self.tableView withYPosConstraint:self.tableTopConstraint viewBelow:self.mapView parentView:self.view andDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -53,23 +54,21 @@
 - (void) tableView: (UITableView*) tableView backgroundYoriginWillChange: (CGFloat) yOrigin withAnimationDuration: (CGFloat) duration{
     NSLog(@"==== backgroundYoriginDidChange ====> %f, %f", yOrigin,duration);
     if(duration > 0.0){
+        self.tableBackgroundYPosition.constant = yOrigin;
         __weak ViewController *weakSelf = self;
         [UIView animateWithDuration:duration animations:^{
-            CGRect bckgFrame = weakSelf.tableViewBackground.frame;
-            bckgFrame.origin.y = yOrigin;
-            weakSelf.tableViewBackground.frame = bckgFrame;
-        } completion:^(BOOL finished) {
-            weakSelf.tableBackgroundYPosition.constant = yOrigin;
+            [weakSelf.view layoutIfNeeded];
         }];
     }
     else{
         self.tableBackgroundYPosition.constant = yOrigin;
+        [self.view layoutIfNeeded];
     }
 }
 #pragma mark - UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 1;
+    return 20;
 }
 
 

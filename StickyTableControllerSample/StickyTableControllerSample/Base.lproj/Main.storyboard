@@ -66,6 +66,7 @@
                     <connections>
                         <outlet property="mapView" destination="bfZ-Sk-oNP" id="Qir-UM-d3c"/>
                         <outlet property="tableBackgroundYPosition" destination="g5T-fd-1Hm" id="Uxf-m1-vHb"/>
+                        <outlet property="tableTopConstraint" destination="xNG-fp-9Yd" id="Kqu-Ma-jYg"/>
                         <outlet property="tableView" destination="sKM-OK-86I" id="UlS-Ko-OHr"/>
                         <outlet property="tableViewBackground" destination="OPe-Ch-7kf" id="HeW-CA-sVd"/>
                     </connections>

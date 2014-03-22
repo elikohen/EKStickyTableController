@@ -28,7 +28,7 @@
 @property (nonatomic) CGFloat listExpandThreshold;
 @property (nonatomic, weak) id<EKStickyTableControllerDelegate> delegate;
 
-- (void) setupOnTableView: (UITableView*) tableView withViewBelow: (UIView*) belowView parentView: (UIView*) view andDelegate:(id<EKStickyTableControllerDelegate>) delegate;
+- (void) setupOnTableView: (UITableView*) tableView withYPosConstraint: (NSLayoutConstraint*) yConstraint viewBelow: (UIView*) belowView parentView: (UIView*) view andDelegate:(id<EKStickyTableControllerDelegate>) delegate;
 
 @end
 
