@@ -10,6 +10,8 @@
 #import "EKStickyTableProxyDelegate.h"
 #import "EKStickyTableHeader.h"
 
+#define kCOLLAPSE_EXPAND_ANIMATION_DURATION 0.3
+
 @interface EKStickyTableController (){
     BOOL mHeaderExpanded;
     BOOL mWaitUntilDecelerated;
@@ -52,7 +54,7 @@
     }
     tableView.tableHeaderView = self.mTableHeader;
     
-    [self tableBackgroundOriginDidChange:view.frame.size.height - self.collapsedHeaderHeight];
+    [self tableBackgroundOriginDidChange:self.collapsedHeaderHeight];
     
     tableView.delegate = self.mProxyDelegate;
     tableView.dataSource = self.mProxyDelegate;
@@ -95,16 +97,24 @@
     
     //List header height
     CGRect hframe = self.mTableHeader.frame;
+    CGFloat oldHeight = hframe.size.height;
     hframe.size.height = newHeight;
-    self.mTableHeader.frame = hframe;
     
     [self onHeaderHeightWillChange:newHeight];
     
     //Animate changes
     __weak EKStickyTableController *weakSelf = self;
-    [UIView animateWithDuration:0.3 animations:^{
-        weakSelf.mTableView.tableHeaderView = self.mTableHeader;
-        [weakSelf.mParentView layoutIfNeeded];
+    
+    UIEdgeInsets tableInset = self.mTableView.contentInset;
+    UIEdgeInsets auxInset = self.mTableView.contentInset;
+    auxInset.top += newHeight - oldHeight;
+    
+    [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
+        weakSelf.mTableView.contentInset = auxInset;
+    } completion:^(BOOL finished) {
+        weakSelf.mTableHeader.frame = hframe;
+        weakSelf.mTableView.tableHeaderView = weakSelf.mTableHeader;
+        weakSelf.mTableView.contentInset = tableInset;
     }];
 }
 
@@ -129,7 +139,7 @@
         
         //First move table (scrolling) to the correct position, and then change header height to avoid table glitching
         __weak EKStickyTableController* weakSelf = self;
-        [UIView animateWithDuration:0.3 animations:^{
+        [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
             CGRect scrollBounds = self.mTableView.bounds;
             scrollBounds.origin.y = deltaY;
             weakSelf.mTableView.bounds = scrollBounds;
