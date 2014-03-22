@@ -17,7 +17,7 @@
 @optional
 - (void) onHeaderHeightWillChange: (CGFloat) height;
 - (void) onHeaderHeightIsStretched: (CGFloat) height;
-- (void) tableView: (UITableView*) tableView backgroundYoriginDidChange: (CGFloat) yOrigin;
+- (void) tableView: (UITableView*) tableView backgroundYoriginWillChange: (CGFloat) yOrigin withAnimationDuration: (CGFloat) duration;
 
 @end
 

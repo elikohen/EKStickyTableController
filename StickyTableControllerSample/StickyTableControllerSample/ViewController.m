@@ -13,6 +13,7 @@
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIView *tableViewBackground;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableBackgroundYPosition;
 
 
@@ -49,15 +50,26 @@
     NSLog(@"==== onHeaderHeightIsStretched ====> %f", height);
 }
 
-- (void) tableView: (UITableView*) tableView backgroundYoriginDidChange: (CGFloat) yOrigin{
-    NSLog(@"==== backgroundYoriginDidChange ====> %f", yOrigin);
-    self.tableBackgroundYPosition.constant = yOrigin;
+- (void) tableView: (UITableView*) tableView backgroundYoriginWillChange: (CGFloat) yOrigin withAnimationDuration: (CGFloat) duration{
+    NSLog(@"==== backgroundYoriginDidChange ====> %f, %f", yOrigin,duration);
+    if(duration > 0.0){
+        __weak ViewController *weakSelf = self;
+        [UIView animateWithDuration:duration animations:^{
+            CGRect bckgFrame = weakSelf.tableViewBackground.frame;
+            bckgFrame.origin.y = yOrigin;
+            weakSelf.tableViewBackground.frame = bckgFrame;
+        } completion:^(BOOL finished) {
+            weakSelf.tableBackgroundYPosition.constant = yOrigin;
+        }];
+    }
+    else{
+        self.tableBackgroundYPosition.constant = yOrigin;
+    }
 }
-
 #pragma mark - UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 20;
+    return 1;
 }
 
 

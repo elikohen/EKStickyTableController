@@ -67,6 +67,7 @@
                         <outlet property="mapView" destination="bfZ-Sk-oNP" id="Qir-UM-d3c"/>
                         <outlet property="tableBackgroundYPosition" destination="g5T-fd-1Hm" id="Uxf-m1-vHb"/>
                         <outlet property="tableView" destination="sKM-OK-86I" id="UlS-Ko-OHr"/>
+                        <outlet property="tableViewBackground" destination="OPe-Ch-7kf" id="HeW-CA-sVd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

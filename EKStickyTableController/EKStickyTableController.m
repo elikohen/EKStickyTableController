@@ -16,6 +16,7 @@
     BOOL mHeaderExpanded;
     BOOL mWaitUntilDecelerated;
     BOOL mDragging;
+    BOOL mAnimatingTableInsets;
 }
 
 @property (nonatomic,strong) EKStickyTableProxyDelegate *mProxyDelegate;
@@ -54,7 +55,7 @@
     }
     tableView.tableHeaderView = self.mTableHeader;
     
-    [self tableBackgroundOriginDidChange:self.collapsedHeaderHeight];
+    [self tableBackgroundOriginWillChange:self.collapsedHeaderHeight withAnimationDuration:0.0];
     
     tableView.delegate = self.mProxyDelegate;
     tableView.dataSource = self.mProxyDelegate;
@@ -82,9 +83,9 @@
     }
 }
 
-- (void) tableBackgroundOriginDidChange: (CGFloat) position{
-    if([self.delegate respondsToSelector:@selector(tableView:backgroundYoriginDidChange:)]){
-        [self.delegate tableView:self.mTableView backgroundYoriginDidChange:position];
+- (void) tableBackgroundOriginWillChange: (CGFloat) position withAnimationDuration: (CGFloat) duration{
+    if([self.delegate respondsToSelector:@selector(tableView:backgroundYoriginWillChange:withAnimationDuration:)]){
+        [self.delegate tableView:self.mTableView backgroundYoriginWillChange:position withAnimationDuration:duration];
     }
 }
 
@@ -109,12 +110,15 @@
     UIEdgeInsets auxInset = self.mTableView.contentInset;
     auxInset.top += newHeight - oldHeight;
     
+    mAnimatingTableInsets = YES;
+    [self tableBackgroundOriginWillChange:newHeight withAnimationDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION];
     [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
         weakSelf.mTableView.contentInset = auxInset;
     } completion:^(BOOL finished) {
         weakSelf.mTableHeader.frame = hframe;
         weakSelf.mTableView.tableHeaderView = weakSelf.mTableHeader;
         weakSelf.mTableView.contentInset = tableInset;
+        mAnimatingTableInsets = NO;
     }];
 }
 
@@ -179,13 +183,15 @@
     }
     
     //Move list background to avoid showing map below table
-    if(baseHeight < 0){
-        baseHeight = 0;
+    if(!mAnimatingTableInsets){
+        if(baseHeight < 0){
+            baseHeight = 0;
+        }
+        else if(baseHeight > self.mParentView.frame.size.height){
+            baseHeight = self.mParentView.frame.size.height;
+        }
+        [self tableBackgroundOriginWillChange:baseHeight withAnimationDuration:0.0];
     }
-    else if(baseHeight > self.mParentView.frame.size.height){
-        baseHeight = self.mParentView.frame.size.height;
-    }
-    [self tableBackgroundOriginDidChange:baseHeight];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
