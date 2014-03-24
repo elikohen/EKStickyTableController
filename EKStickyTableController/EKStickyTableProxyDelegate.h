@@ -13,7 +13,8 @@
 
 @interface EKStickyTableProxyDelegate : NSProxy <UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic, weak) id <UITableViewDelegate,UITableViewDataSource>realDelegate;
+@property (nonatomic, weak) id <UITableViewDelegate>tableDelegate;
+@property (nonatomic, weak) id <UITableViewDataSource>tableDataSource;
 @property (nonatomic, weak) EKStickyTableController *controller;
 
 + (instancetype)new;

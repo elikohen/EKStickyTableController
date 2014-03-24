@@ -41,8 +41,11 @@
 
 - (void) setupOnTableView: (UITableView*) tableView withYPosConstraint: (NSLayoutConstraint*) yConstraint viewBelow: (UIView*) belowView parentView: (UIView*) view andDelegate:(id<EKStickyTableControllerDelegate>) delegate{
     self.mProxyDelegate = [EKStickyTableProxyDelegate new];
-    self.mProxyDelegate.realDelegate = delegate;
+    self.mProxyDelegate.tableDelegate = tableView.delegate;
+    self.mProxyDelegate.tableDataSource = tableView.dataSource;
     self.mProxyDelegate.controller = self;
+    
+    //TODO: SET KEY VALUE OBSERVER FOR tableView.delegate && tableView.dataSource
     
     self.delegate = delegate;
     
@@ -69,7 +72,6 @@
 
 - (void) setDelegate:(id<EKStickyTableControllerDelegate>)delegate{
     _delegate = delegate;
-    [self.mProxyDelegate setRealDelegate:delegate];
 }
 
 #pragma mark - delegate methods

@@ -12,7 +12,7 @@
 #define DEFAULT_EXPANDED_HEADER_VISIBLE_LIST_HEIGHT 100.0
 #define DEFAULT_LIST_EXPAND_THRESHOLD 50.0f
 
-@protocol EKStickyTableControllerDelegate <UITableViewDataSource,UITableViewDelegate>
+@protocol EKStickyTableControllerDelegate <NSObject>
 
 @optional
 - (void) onHeaderHeightWillChange: (CGFloat) height;

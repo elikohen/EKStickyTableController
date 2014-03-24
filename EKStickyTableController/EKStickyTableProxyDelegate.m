@@ -21,7 +21,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<EKStickyTableProxyDelegate: %p, realDelegate (%@): %p>", self, (self.realDelegate ? [self.realDelegate class] : @""), self.realDelegate];
+    return [NSString stringWithFormat:@"<EKStickyTableProxyDelegate: %p, realDelegate (%@): %p>", self, (self.tableDelegate ? [self.tableDelegate class] : @""), self.tableDelegate];
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
@@ -38,9 +38,10 @@
     if (selector == @selector(scrollViewDidEndDecelerating:))
         return [[EKStickyTableProxyDelegate class] methodSignatureForSelector:selector];
     
-    if ([self.realDelegate respondsToSelector:selector])
-        return [(NSObject *)self.realDelegate methodSignatureForSelector:selector];
-    
+    if ([self.tableDelegate respondsToSelector:selector])
+        return [(NSObject *)self.tableDelegate methodSignatureForSelector:selector];
+    if ([self.tableDataSource respondsToSelector:selector])
+        return [(NSObject *)self.tableDataSource methodSignatureForSelector:selector];
     return [[NSObject class] methodSignatureForSelector:selector];
 }
 
@@ -50,9 +51,13 @@
     {
         [invocation invokeWithTarget:self];
     }
-    else if ([self.realDelegate respondsToSelector:invocation.selector])
+    else if ([self.tableDelegate respondsToSelector:invocation.selector])
     {
-        [invocation invokeWithTarget:self.realDelegate];
+        [invocation invokeWithTarget:self.tableDelegate];
+    }
+    else if ([self.tableDataSource respondsToSelector:invocation.selector])
+    {
+        [invocation invokeWithTarget:self.tableDataSource];
     }
 }
 
@@ -70,37 +75,37 @@
     if (selector == @selector(scrollViewDidEndDecelerating:))
         return YES;
     
-    return ([self.realDelegate respondsToSelector:selector]);
+    return ([self.tableDelegate respondsToSelector:selector] || [self.tableDataSource respondsToSelector:selector]);
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
-    if([self.realDelegate respondsToSelector:@selector(scrollViewDidScroll:)]){
-        [self.realDelegate scrollViewDidScroll:scrollView];
+    if([self.tableDelegate respondsToSelector:@selector(scrollViewDidScroll:)]){
+        [self.tableDelegate scrollViewDidScroll:scrollView];
     }
     
     [self.controller scrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    if([self.realDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]){
-        [self.realDelegate scrollViewWillBeginDragging:scrollView];
+    if([self.tableDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]){
+        [self.tableDelegate scrollViewWillBeginDragging:scrollView];
     }
     
     [self.controller scrollViewWillBeginDragging:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    if([self.realDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]){
-        [self.realDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    if([self.tableDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]){
+        [self.tableDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
     
     [self.controller scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    if([self.realDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]){
-        [self.realDelegate scrollViewDidEndDecelerating:scrollView];
+    if([self.tableDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]){
+        [self.tableDelegate scrollViewDidEndDecelerating:scrollView];
     }
     
     [self.controller scrollViewDidEndDecelerating:scrollView];
