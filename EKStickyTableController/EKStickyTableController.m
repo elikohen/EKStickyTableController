@@ -93,6 +93,10 @@
 }
 
 #pragma mark - Private methods
+- (BOOL) expanded{
+    return mHeaderExpanded;
+}
+
 - (void) expandHeader{
     if(mHeaderExpanded) return;
     mHeaderExpanded = YES;

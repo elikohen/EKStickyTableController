@@ -30,5 +30,9 @@
 
 - (void) setupOnTableView: (UITableView*) tableView withYPosConstraint: (NSLayoutConstraint*) yConstraint viewBelow: (UIView*) belowView parentView: (UIView*) view andDelegate:(id<EKStickyTableControllerDelegate>) delegate;
 
+- (BOOL) expanded;
+- (void) expandHeader;
+- (void) collapseHeader;
+
 @end
 

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "EKStickyTableController.h"
+#import <MapKit/MapKit.h>
 
-@interface ViewController : UIViewController <EKStickyTableControllerDelegate>
+@interface ViewController : UIViewController <EKStickyTableControllerDelegate, MKMapViewDelegate>
 
 @end
