@@ -56,8 +56,9 @@
     self.mTableHeader.belowView = belowView;
     UIView *realHeader = tableView.tableHeaderView;
     if(realHeader){
-        realHeader.frame = tableFrame;
-        [self.mTableHeader addSubview:realHeader];
+        for(UIView *subview in realHeader.subviews){
+            [self addSubviewToHeader:subview];
+        }
     }
     tableView.tableHeaderView = self.mTableHeader;
     
@@ -95,6 +96,43 @@
 }
 
 #pragma mark - Private methods
+- (void) addSubviewToHeader: (UIView*) subview{
+    [self.mTableHeader addSubview:subview];
+    CGRect frame = subview.frame;
+    NSLog(@"Subview frame: %@", NSStringFromCGRect(frame));
+    CGSize hSize = self.mTableHeader.frame.size;
+    NSLog(@"header size: %@", NSStringFromCGSize(hSize));
+    [self.mTableHeader addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                  attribute:NSLayoutAttributeBottom
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.mTableHeader
+                                                                  attribute:NSLayoutAttributeBottom
+                                                                 multiplier:1.0
+                                                                   constant:(frame.origin.y + frame.size.height)-hSize.height]];
+    [self.mTableHeader addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                  attribute:NSLayoutAttributeHeight
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:nil
+                                                                  attribute:NSLayoutAttributeHeight
+                                                                 multiplier:1.0
+                                                                   constant:frame.size.height]];
+    [self.mTableHeader addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                  attribute:NSLayoutAttributeLeading
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.mTableHeader
+                                                                  attribute:NSLayoutAttributeLeading
+                                                                 multiplier:1.0
+                                                                   constant:frame.origin.x]];
+    [self.mTableHeader addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                  attribute:NSLayoutAttributeTrailing
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.mTableHeader
+                                                                  attribute:NSLayoutAttributeTrailing
+                                                                 multiplier:1.0
+                                                                   constant:(frame.origin.x + frame.size.width)-hSize.width]];
+}
+
+
 - (BOOL) expanded{
     return mHeaderExpanded;
 }
