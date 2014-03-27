@@ -43,8 +43,21 @@
 
 #pragma mark - EKStickyTableControllerDelegate
 
+- (void) onHeaderViewTapped{
+    NSLog(@"==== onHeaderViewTapped ====");
+    [self.mStickyTableController expandHeader];
+}
+
 - (void) onHeaderHeightWillChange: (CGFloat) height{
     NSLog(@"==== onHeaderHeightWillChange ====> %f", height);
+    if(height > DEFAULT_COLLAPSED_HEADER_HEIGHT){
+        //Expanded
+        [self.mStickyTableController setHeaderTrespassing:YES];
+    }
+    else{
+        //Collapsed
+        [self.mStickyTableController setHeaderTrespassing:NO];
+    }
 }
 
 - (void) onHeaderHeightIsStretched: (CGFloat) height{

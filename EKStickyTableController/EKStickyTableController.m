@@ -53,6 +53,7 @@
     
     CGRect tableFrame = CGRectMake(0, 0, tableView.frame.size.width, self.collapsedHeaderHeight);
     self.mTableHeader = [[EKStickyTableHeader alloc] initWithFrame:tableFrame];
+    self.mTableHeader.delegate = self;
     self.mTableHeader.belowView = belowView;
     UIView *realHeader = tableView.tableHeaderView;
     if(realHeader){
@@ -95,13 +96,19 @@
     }
 }
 
+#pragma mark - EKStickyTableHeaderDelegate
+
+- (void) onStickyHeaderTapped: (EKStickyTableHeader*) header{
+    if([self.delegate respondsToSelector:@selector(onHeaderViewTapped)]){
+        [self.delegate onHeaderViewTapped];
+    }
+}
+
 #pragma mark - Private methods
 - (void) addSubviewToHeader: (UIView*) subview{
     [self.mTableHeader addSubview:subview];
     CGRect frame = subview.frame;
-    NSLog(@"Subview frame: %@", NSStringFromCGRect(frame));
     CGSize hSize = self.mTableHeader.frame.size;
-    NSLog(@"header size: %@", NSStringFromCGSize(hSize));
     [self.mTableHeader addConstraint:[NSLayoutConstraint constraintWithItem:subview
                                                                   attribute:NSLayoutAttributeBottom
                                                                   relatedBy:NSLayoutRelationEqual
@@ -132,6 +139,9 @@
                                                                    constant:(frame.origin.x + frame.size.width)-hSize.width]];
 }
 
+- (void) setHeaderTrespassing: (BOOL) trespassing{
+    self.mTableHeader.trespassingEnabled = trespassing;
+}
 
 - (BOOL) expanded{
     return mHeaderExpanded;

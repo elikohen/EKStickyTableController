@@ -487,6 +487,7 @@
 				C7BC960A18DCCA7D00898904 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C7BC960B18DCCA7D00898904 /* Build configuration list for PBXNativeTarget "StickyTableControllerSampleTests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +496,7 @@
 				C7BC960D18DCCA7D00898904 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

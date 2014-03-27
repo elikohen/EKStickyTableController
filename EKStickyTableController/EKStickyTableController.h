@@ -15,6 +15,7 @@
 @protocol EKStickyTableControllerDelegate <NSObject>
 
 @optional
+- (void) onHeaderViewTapped;
 - (void) onHeaderHeightWillChange: (CGFloat) height;
 - (void) onHeaderHeightIsStretched: (CGFloat) height;
 - (void) tableView: (UITableView*) tableView backgroundYoriginWillChange: (CGFloat) yOrigin withAnimationDuration: (CGFloat) duration;
@@ -30,6 +31,7 @@
 
 - (void) setupOnTableView: (UITableView*) tableView withYPosConstraint: (NSLayoutConstraint*) yConstraint viewBelow: (UIView*) belowView parentView: (UIView*) view andDelegate:(id<EKStickyTableControllerDelegate>) delegate;
 
+- (void) setHeaderTrespassing: (BOOL) trespassing;
 - (BOOL) expanded;
 - (void) expandHeader;
 - (void) collapseHeader;
