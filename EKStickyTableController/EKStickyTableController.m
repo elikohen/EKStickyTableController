@@ -169,6 +169,9 @@
     
     mAnimatingTableInsets = YES;
     [self tableBackgroundOriginWillChange:newHeight withAnimationDuration:0.0];
+    
+    //TODO: Temporal fix until realize how to expand header without having table sections glitch
+    self.mTableHeader.alpha = 0.0;
     [UIView animateWithDuration:kCOLLAPSE_EXPAND_ANIMATION_DURATION animations:^{
         weakSelf.mTableView.contentInset = auxInset;
         [weakSelf.mParentView layoutIfNeeded];
@@ -176,6 +179,8 @@
         weakSelf.mTableHeader.frame = hframe;
         weakSelf.mTableView.tableHeaderView = weakSelf.mTableHeader;
         weakSelf.mTableView.contentInset = tableInset;
+        //TODO: Temporal fix until realize how to expand header without having table sections glitch
+        self.mTableHeader.alpha = 1.0;
         mAnimatingTableInsets = NO;
     }];
 }
