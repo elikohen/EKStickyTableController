@@ -105,7 +105,10 @@
 }
 
 #pragma mark - Private methods
-- (void) addSubviewToHeader: (UIView*) subview{
+- (void) addSubviewToHeader: (UIView*) aSubview{
+    NSData *tempArchiveView = [NSKeyedArchiver archivedDataWithRootObject:aSubview];
+    UIView *subview = [NSKeyedUnarchiver unarchiveObjectWithData:tempArchiveView];
+    
     [self.mTableHeader addSubview:subview];
     CGRect frame = subview.frame;
     CGSize hSize = self.mTableHeader.frame.size;

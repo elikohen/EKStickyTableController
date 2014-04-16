@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "EKStickyTableController"
-  s.version      = "0.0.6"
+  s.version      = "0.0.7"
   s.summary      = "iOS UITableView drag to expand/collapse header behaviour like Foursquare TableView + Map"
 
   s.description  = <<-DESC
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   
   s.platform     = :ios, '6.0'
 
-  s.source       = { :git => "https://github.com/elikohen/EKStickyTableController.git", :tag => "0.0.6" }
+  s.source       = { :git => "https://github.com/elikohen/EKStickyTableController.git", :tag => "0.0.7" }
 
   s.source_files  = 'EKStickyTableController/*.{h,m}'
   s.exclude_files = 'StickyTableControllerSample'
